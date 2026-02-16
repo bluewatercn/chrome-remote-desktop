@@ -3,7 +3,7 @@ FROM ubuntu:noble
 ENV DEBIAN_FRONTEND=noninteractive
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
-RUN apt install -y curl gpg wget \
+RUN apt-get install -y curl gpg wget \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
      && apt-get autoclean
