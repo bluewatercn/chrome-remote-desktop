@@ -3,9 +3,14 @@ FROM ubuntu:noble
 ENV DEBIAN_FRONTEND=noninteractive
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
+RUN apt install -y curl gpg wget \
+     && rm -rf /var/lib/apt/lists/* \
+     && apt-get clean \
+     && apt-get autoclean
+
 RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
      && apt-get update && apt-get upgrade -y \
-     && apt-get install -y --fix-broken curl gpg wget sudo apt-utils xvfb xfce4 xbase-clients desktop-base vim google-chrome-stable psmisc xserver-xorg-video-dummy ffmpeg dialog python3-xdg fonts-noto-cjk pavucontrol ibus ibus-rime rime-data-pinyin-simp python3-packaging python3-psutil dbus-x11 libutempter0 \
+     && apt-get install -y --fix-broken sudo apt-utils xvfb xfce4 xbase-clients desktop-base vim google-chrome-stable psmisc xserver-xorg-video-dummy ffmpeg dialog python3-xdg fonts-noto-cjk pavucontrol ibus ibus-rime rime-data-pinyin-simp python3-packaging python3-psutil dbus-x11 libutempter0 \
      && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | tee /etc/apt/keyrings/google-chrome.gpg > /dev/null \
      && wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb \
      && apt-get install -y --fix-broken ./chrome-remote-desktop_current_amd64.deb \
