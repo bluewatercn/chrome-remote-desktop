@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM ubuntu:resolute
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,6 +18,7 @@ RUN apt-get update \
      &&  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
      && apt-get install -y ./google-chrome-stable_current_amd64.deb \
      && apt-get install -y --fix-broken --no-install-recommends \
+     && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-resterizer#g' /usr/share/applications/google-chrome.desktop
      && rm -rf google-chrome-stable_current_amd64.deb \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
