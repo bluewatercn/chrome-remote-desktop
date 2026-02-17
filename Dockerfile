@@ -47,7 +47,7 @@ RUN mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpa
      && echo 'export GTK_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
      && echo 'export QT_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
      && echo 'export XMODIFIERS=@im=ibus'  >> .chrome-remote-desktop-session \
-     && echo 'ibus-daemon -drx' \
+     && echo 'ibus-daemon -drx' >> .chrome-remote-desktop-session \
      && echo "exec startxfce4 :1030" >> .chrome-remote-desktop-session \
      && chown -R $USER:$USER /home/$USER
 CMD \
