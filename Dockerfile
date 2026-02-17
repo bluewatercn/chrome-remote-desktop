@@ -42,6 +42,8 @@ WORKDIR /home/$USER
 RUN mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
      && chmod a+rx .config/chrome-remote-desktop \
      && echo "/usr/bin/pulseaudio --start" > .chrome-remote-desktop-session \
+     && echo "pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2" >> .chrome-remote-desktop-session \
+     && echo 'pactl set-default-sink chrome_remote_desktop_session' >> .chrome-remote-desktop-session \
      && echo "startxfce4 :1030" >> .chrome-remote-desktop-session \
      && chown -R $USER:$USER /home/$USER
 CMD \
