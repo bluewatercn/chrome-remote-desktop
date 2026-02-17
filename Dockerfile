@@ -18,7 +18,7 @@ RUN apt-get update \
      &&  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
      && apt-get install -y ./google-chrome-stable_current_amd64.deb \
      && apt-get install -y --fix-broken --no-install-recommends \
-     && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-resterizer#g' /usr/share/applications/google-chrome.desktop \
+     && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
      && rm -rf google-chrome-stable_current_amd64.deb \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
@@ -42,9 +42,13 @@ WORKDIR /home/$USER
 RUN mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
      && chmod a+rx .config/chrome-remote-desktop \
      && echo "/usr/bin/pulseaudio --start" > .chrome-remote-desktop-session \
-     && echo "pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2" >> .chrome-remote-desktop-session \
+     && echo "pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=44100 channels=2" >> .chrome-remote-desktop-session \
      && echo 'pactl set-default-sink chrome_remote_desktop_session' >> .chrome-remote-desktop-session \
-     && echo "startxfce4 :1030" >> .chrome-remote-desktop-session \
+     && echo 'export GTK_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
+     && echo 'export QT_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
+     && echo 'export XMODIFIERS=@im=ibus'  >> .chrome-remote-desktop-session \
+     && echo 'ibus-daemon -drx' \
+     && echo "exec startxfce4 :1030" >> .chrome-remote-desktop-session \
      && chown -R $USER:$USER /home/$USER
 CMD \
    DISPLAY= /opt/google/chrome-remote-desktop/start-host --code=$CODE --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$HOSTNAME --pin=$PIN ; \
