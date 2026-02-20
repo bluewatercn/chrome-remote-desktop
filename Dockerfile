@@ -24,11 +24,14 @@ COPY --from=downloader /google-chrome.deb /tmp/
 # COPY ENTRYPOINT
 COPY entrypoint.sh /entrypoint.sh
 
+# DISABLE LANGUAGE CACHE
+echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
+
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
-     && apt-get install -y --fix-broken --no-install-recommends sudo vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 \
-     && apt-get install -y --no-install-recommends /tmp/chrome-remote-desktop.deb \
-     && apt-get install -y --no-install-recommends /tmp/google-chrome.deb \
+     && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 \
+     && apt-get install -y --no-install-recommends --no-install-suggests /tmp/chrome-remote-desktop.deb \
+     && apt-get install -y --no-install-recommends --no-install-suggests /tmp/google-chrome.deb \
      && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
      && rm -rf /tmp/*.deb \
      && rm -rf /var/lib/apt/lists/* \
@@ -37,7 +40,6 @@ RUN apt-get update \
      && rm -rf /usr/share/doc/* /usr/share/man/* /tmp/* \
      && chmod 777 /entrypoint.sh \
      && adduser --disabled-password --gecos '' $USER \
-     && mkhomedir_helper $USER \
      && adduser $USER sudo \
      && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
      && usermod -aG chrome-remote-desktop $USER 
