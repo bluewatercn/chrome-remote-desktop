@@ -9,7 +9,7 @@ RUN apt-get update &&  apt-get install -y curl gpg wget \
      && apt-get autoclean
 
 RUN apt-get update \
-     && apt-get install -y --fix-broken sudo apt-utils xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol ibus ibus-rime rime-data-pinyin-simp dbus-x11 libutempter0 \
+     && apt-get install -y --fix-broken sudo xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol dbus-x11 libutempter0 \
      && wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb \
      && apt-get install -y --fix-broken ./chrome-remote-desktop_current_amd64.deb \
      && rm -f chrome-remote-desktop_current_amd64.deb \
@@ -46,10 +46,6 @@ RUN  mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashp
      && echo 'pulseaudio --daemonize=yes --system=false --exit-idle-time=-1 --log-target=stderr'  > .chrome-remote-desktop-session \
      && echo 'pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2' >> .chrome-remote-desktop-session \
      && echo 'pactl set-default-sink chrome_remote_desktop_session' >> .chrome-remote-desktop-session \
-     && echo 'export GTK_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
-     && echo 'export QT_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
-     && echo 'export XMODIFIERS=@im=ibus'  >> .chrome-remote-desktop-session \
-     && echo 'ibus-daemon -drx' >> .chrome-remote-desktop-session \
      && echo 'exec openbox-session' >> .chrome-remote-desktop-session \
      && chown -R $USER:$USER /home/$USER
 
