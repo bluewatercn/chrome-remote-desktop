@@ -1,5 +1,7 @@
 FROM debian:trixie-slim AS downloader
-RUN apt-get update && apt-get install -y wget ca-certificates
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends wget ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 RUN wget -O /chrome-remote-desktop.deb https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb && \
     wget -O /google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
@@ -30,15 +32,15 @@ RUN echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
      && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 \
-     && apt-get install -y --no-install-recommends --no-install-suggests /tmp/chrome-remote-desktop.deb \
-     && apt-get install -y --no-install-recommends --no-install-suggests /tmp/google-chrome.deb \
+     && /tmp/chrome-remote-desktop.deb \
+     && /tmp/google-chrome.deb \
      && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
+     && apt-get clean \
      && rm -rf /tmp/*.deb \
      && rm -rf /var/lib/apt/lists/* \
-     && apt-get clean \
-     && apt-get autoclean \
      && rm -rf /usr/share/doc/* /usr/share/man/* /tmp/* \
-     && chmod 777 /entrypoint.sh \
+     && rm -rf /usr/share/locale/* \
+     && chmod +x /entrypoint.sh \
      && adduser --disabled-password --gecos '' $USER \
      && adduser $USER sudo \
      && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
