@@ -2,8 +2,7 @@ FROM debian:trixie-slim AS downloader
 RUN apt-get update \
  && apt-get install -y --no-install-recommends wget ca-certificates \
  && rm -rf /var/lib/apt/lists/*
-RUN wget -O /chrome-remote-desktop.deb https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb && \
-    wget -O /google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN wget -O /chrome-remote-desktop.deb https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
 
 
 
@@ -20,7 +19,6 @@ ENV USER=crduser
 ENV DEBIAN_FRONTEND=noninteractive
 
 # COPY FROM DOWNLOADER
-COPY --from=downloader /chrome-remote-desktop.deb /tmp/
 COPY --from=downloader /google-chrome.deb /tmp/
 
 # COPY ENTRYPOINT
@@ -31,10 +29,9 @@ RUN echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
-     && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 \
+     && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 chromium \
      && /tmp/chrome-remote-desktop.deb \
-     && /tmp/google-chrome.deb \
-     && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
+     && sed -i 's#/usr/bin/chromium#/usr/bin/chromium --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/chromium.desktop \
      && apt-get clean \
      && rm -rf /tmp/*.deb \
      && rm -rf /var/lib/apt/lists/* \
