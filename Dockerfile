@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
