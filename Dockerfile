@@ -29,7 +29,7 @@ RUN echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
-     && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 chromium \
+     && apt-get install -y --fix-broken --no-install-recommends --no-install-suggests sudo pulseaudio vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 chromium  /tmp/chrome-remote-desktop.deb \
      && sed -i 's#/usr/bin/chromium#/usr/bin/chromium --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/chromium.desktop \
      && apt-get clean \
      && rm -rf /tmp/*.deb \
