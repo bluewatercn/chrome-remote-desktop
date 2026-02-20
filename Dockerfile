@@ -19,7 +19,7 @@ ENV USER=crduser
 ENV DEBIAN_FRONTEND=noninteractive
 
 # COPY FROM DOWNLOADER
-COPY --from=downloader /google-chrome.deb /tmp/
+COPY --from=downloader /chrome-remote-desktop.deb /tmp/
 
 # COPY ENTRYPOINT
 COPY entrypoint.sh /entrypoint.sh
