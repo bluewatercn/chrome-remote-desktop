@@ -3,20 +3,18 @@ FROM ubuntu:noble
 ENV DEBIAN_FRONTEND=noninteractive
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
-RUN apt-get update && apt-get -y upgrade && apt-get install -y curl gpg wget \
+RUN apt-get update &&  apt-get install -y curl gpg wget \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
      && apt-get autoclean
 
 RUN apt-get update \
      && apt-get install -y --fix-broken sudo apt-utils xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol ibus ibus-rime rime-data-pinyin-simp dbus-x11 libutempter0 \
-     #&& wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | tee /etc/apt/keyrings/google-chrome.gpg > /dev/null \
      && wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb \
      && apt-get install -y --fix-broken ./chrome-remote-desktop_current_amd64.deb \
      && rm -f chrome-remote-desktop_current_amd64.deb \
      && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
      && apt-get install -y ./google-chrome-stable_current_amd64.deb \
-     && apt-get install -y --fix-broken --no-install-recommends \
      && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
      && rm -rf google-chrome-stable_current_amd64.deb \
      && rm -rf /var/lib/apt/lists/* \
@@ -29,6 +27,7 @@ ARG USER=crduser
 ENV PIN=123456
 ENV CODE=4/xxx
 ENV HOSTNAME=myvirtualdesktop
+ENV USER=$USER
 
 # ADD USER TO THE SPECIFIED GROUPS
 RUN adduser --disabled-password --gecos '' $USER \
@@ -38,9 +37,8 @@ RUN adduser --disabled-password --gecos '' $USER \
      && usermod -aG chrome-remote-desktop $USER 
 USER $USER
 WORKDIR /home/$USER
-COPY entrypoint.sh /
-RUN  chmod 777 /entrypoint.sh \
-     && mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+RUN  mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
      && chmod a+rx .config/chrome-remote-desktop \
      && echo "/usr/bin/pulseaudio --start" > .chrome-remote-desktop-session \
      && echo "pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2" >> .chrome-remote-desktop-session \
