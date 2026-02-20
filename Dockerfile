@@ -37,7 +37,8 @@ RUN adduser --disabled-password --gecos '' $USER \
      && usermod -aG chrome-remote-desktop $USER 
 USER $USER
 WORKDIR /home/$USER
-COPY --chmod=755 entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN  chmod 777 /entrypoint.sh
 RUN  mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
      && chmod a+rx .config/chrome-remote-desktop \
      && echo "/usr/bin/pulseaudio --start" > .chrome-remote-desktop-session \
