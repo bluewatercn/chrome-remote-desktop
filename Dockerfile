@@ -26,15 +26,15 @@ COPY entrypoint.sh /entrypoint.sh
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
-     && apt-get install -y --fix-broken --no-install-recommends curl gpg wget sudo xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol dbus-x11 libutempter0 \
+     && apt-get install -y --fix-broken --no-install-recommends sudo vim psmisc openbox obconf tint2 xterm fonts-wqy-zenhei fonts-liberation pavucontrol dbus-x11 libutempter0 \
      && apt-get install -y --no-install-recommends /tmp/chrome-remote-desktop.deb \
      && apt-get install -y --no-install-recommends /tmp/google-chrome.deb \
      && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
-     && rm -rf /tmp/google-chrome.deb \
-     && rm -rf /tmp/chrome-remote-desktop.deb \
+     && rm -rf /tmp/*.deb \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
      && apt-get autoclean \
+     && rm -rf /usr/share/doc/* /usr/share/man/* /tmp/* \
      && chmod 777 /entrypoint.sh \
      && adduser --disabled-password --gecos '' $USER \
      && mkhomedir_helper $USER \
