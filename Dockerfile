@@ -9,12 +9,12 @@ RUN apt-get update &&  apt-get install -y curl gpg wget \
      && apt-get autoclean
 
 RUN apt-get update \
-     && apt-get install -y --fix-broken sudo xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol dbus-x11 libutempter0 \
+     && apt-get install -y --fix-broken --no-install-recommends sudo xvfb vim psmisc dialog openbox obconf tint2 xbase-clients xserver-xorg-video-dummy xterm fonts-noto-cjk pavucontrol dbus-x11 libutempter0 \
      && wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb \
-     && apt-get install -y --fix-broken ./chrome-remote-desktop_current_amd64.deb \
+     && apt-get install -y --fix-broken --no-install-recommends ./chrome-remote-desktop_current_amd64.deb \
      && rm -f chrome-remote-desktop_current_amd64.deb \
      && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
+     && apt-get install -y --no-install-recommends ./google-chrome-stable_current_amd64.deb \
      && sed -i 's#/usr/bin/google-chrome-stable#/usr/bin/google-chrome-stable --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer#g' /usr/share/applications/google-chrome.desktop \
      && rm -rf google-chrome-stable_current_amd64.deb \
      && rm -rf /var/lib/apt/lists/* \
