@@ -25,7 +25,7 @@ COPY --from=downloader /google-chrome.deb /tmp/
 COPY entrypoint.sh /entrypoint.sh
 
 # DISABLE LANGUAGE CACHE
-echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
+RUN echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99nolanguages
 
 # INSTALL SOURCES FOR CHROME REMOTE DESKTOP 
 RUN apt-get update \
