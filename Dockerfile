@@ -26,8 +26,8 @@ ARG USER=crduser
 # use 6 digits at least
 ENV PIN=123456
 ENV CODE=4/xxx
-ENV HOSTNAME=myvirtualdesktop
-ENV USER=$USER
+ENV HOSTNAME=myvirtualdesktoip
+ENV USER=crduser
 
 # COPY ENTRYPOINT
 COPY entrypoint.sh /entrypoint.sh
@@ -43,14 +43,14 @@ USER $USER
 WORKDIR /home/$USER
 RUN  mkdir -p .config/chrome-remote-desktop .config/chrome-remote-desktop/crashpad \
      && chmod a+rx .config/chrome-remote-desktop \
-     && echo "/usr/bin/pulseaudio --start" > .chrome-remote-desktop-session \
-     && echo "pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2" >> .chrome-remote-desktop-session \
+     && echo 'pulseaudio --daemonize=yes --system=false --exit-idle-time=-1 --log-target=stderr'  > .chrome-remote-desktop-session \
+     && echo 'pactl load-module module-pipe-sink sink_name=chrome_remote_desktop_session format=s16le rate=48000 channels=2' >> .chrome-remote-desktop-session \
      && echo 'pactl set-default-sink chrome_remote_desktop_session' >> .chrome-remote-desktop-session \
      && echo 'export GTK_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
      && echo 'export QT_IM_MODULE=ibus'  >> .chrome-remote-desktop-session \
      && echo 'export XMODIFIERS=@im=ibus'  >> .chrome-remote-desktop-session \
      && echo 'ibus-daemon -drx' >> .chrome-remote-desktop-session \
-     && echo "exec openbox-session" >> .chrome-remote-desktop-session \
+     && echo 'exec openbox-session' >> .chrome-remote-desktop-session \
      && chown -R $USER:$USER /home/$USER
 
 ENTRYPOINT ["/entrypoint.sh"]
